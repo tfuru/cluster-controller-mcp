@@ -26,13 +26,14 @@ pip install -r requirements.txt
 
 ## MCPサーバーの設定
 
+設置場所の venv/bin/python のフルパスを指定してください。  
 ```
 {
   "mcpServers": {
     "cluster-controller-mcp": {
-      "command": "/Users/t_furu/work/cluster-tools/cluster-controller-mcp/server/venv/bin/python",
+      "command": "[pwd]/server/venv/bin/python",
       "args": [
-        "/Users/t_furu/work/cluster-tools/cluster-controller-mcp/server/main.py"
+        "[pwd]/server/main.py"
       ]
     }
   }
