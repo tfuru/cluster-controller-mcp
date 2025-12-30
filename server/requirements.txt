@@ -1,0 +1,4 @@
+mcp
+pillow
+pyautogui
+pyobjc-framework-Quartz
