@@ -584,17 +584,36 @@ def wave_hands(side: str = "right", duration: float = 2.0, app_name: str = None)
             pyautogui.keyUp(k)
 
 @mcp.tool()
-def take_screenshot() -> str:
+def take_screenshot(app_name: str = None) -> str:
     """
     現在の画面をスクリーンショット撮影し、一時ファイルのパスを返します。
+    アプリ名を指定する（またはデフォルトアプリがある）場合、そのウィンドウをアクティブにしてから
+    その領域だけを撮影します。
     """
     try:
+        target_app = app_name if app_name else CURRENT_APP_NAME
+        
+        # アプリをアクティブにする
+        if target_app:
+            _focus_window_impl(target_app)
+            # アニメーション待ちなどを考慮して少し待機
+            time.sleep(0.5)
+
+        # ウィンドウ領域を取得
+        region = None
+        if target_app:
+            bounds = _get_window_bounds_impl(target_app)
+            # boundsは (x, y, w, h) のタプルであることを期待
+            if isinstance(bounds, (tuple, list)) and len(bounds) == 4:
+                region = bounds
+        
         temp_dir = tempfile.gettempdir()
         timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f"mac_screenshot_{timestamp}.png"
         filepath = os.path.join(temp_dir, filename)
 
-        screenshot = pyautogui.screenshot()
+        # region引数があればその範囲、なければ全画面
+        screenshot = pyautogui.screenshot(region=region)
         screenshot.save(filepath)
 
         return filepath
